@@ -21,7 +21,7 @@
 <meta property="og:image" content="assets/hero-definitivo.jpg">
 <meta name="theme-color" content="#07111f">
 
-<link rel="stylesheet" href="styles.css?v=2.6">
+<link rel="stylesheet" href="styles.css?v=2.7">
 
 <script type="text/javascript">
 _linkedin_partner_id = "10533385";
@@ -318,6 +318,53 @@ window._linkedin_data_partner_ids.push(_linkedin_partner_id);
   <div class="lightbox-count" id="lightbox-count"></div>
 </div>
 
-<script src="script.js?v=2.6" defer></script>
+<script>
+/* Rastreamento direto no index.html — Google Ads e eventos do WhatsApp */
+(function () {
+  function trackWhatsAppClick(link) {
+    var ctaLocation = link.getAttribute('data-cta-location') || 'nao_identificado';
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'whatsapp_click',
+      property_name: 'Casa Alphaville II',
+      cta_location: ctaLocation,
+      link_url: link.href
+    });
+
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'generate_lead', {
+        event_category: 'WhatsApp',
+        event_label: 'Casa Alphaville II',
+        cta_location: ctaLocation,
+        link_url: link.href,
+        transport_type: 'beacon'
+      });
+
+      window.gtag('event', 'whatsapp_click', {
+        property_name: 'Casa Alphaville II',
+        cta_location: ctaLocation,
+        link_url: link.href,
+        transport_type: 'beacon'
+      });
+
+      window.gtag('event', 'conversion', {
+        send_to: 'AW-18217048699/fHmNCKmp2rkcEPu0yO5D',
+        value: 1.0,
+        currency: 'BRL',
+        transport_type: 'beacon'
+      });
+    }
+  }
+
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest('a[href*="wa.me/"]');
+    if (!link) return;
+    trackWhatsAppClick(link);
+  }, true);
+})();
+</script>
+
+<script src="script.js?v=2.7" defer></script>
 </body>
 </html>
