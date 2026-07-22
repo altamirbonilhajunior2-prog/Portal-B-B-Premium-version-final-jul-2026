@@ -59,6 +59,7 @@ const galleries = {
 document.addEventListener("DOMContentLoaded", () => {
   setupMobileMenu();
   setupLightbox();
+  setupWhatsAppTracking();
 });
 
 function setupMobileMenu() {
@@ -164,5 +165,36 @@ function setupLightbox() {
     if (event.key === "Escape") close();
     if (event.key === "ArrowRight") move(1);
     if (event.key === "ArrowLeft") move(-1);
+  });
+}
+
+function setupWhatsAppTracking() {
+  document.querySelectorAll('a[href*="wa.me/"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      if (typeof window.gtag !== "function") return;
+
+      const ctaLocation = link.dataset.ctaLocation || "nao_identificado";
+
+      window.gtag("event", "generate_lead", {
+        event_category: "WhatsApp",
+        event_label: "Casa Alphaville II",
+        cta_location: ctaLocation,
+        link_url: link.href,
+        transport_type: "beacon"
+      });
+
+      window.gtag("event", "whatsapp_click", {
+        property_name: "Casa Alphaville II",
+        cta_location: ctaLocation,
+        transport_type: "beacon"
+      });
+
+      window.gtag("event", "conversion", {
+        send_to: "AW-18217048699/fHmNCKmp2rkcEPu0yO5D",
+        value: 1.0,
+        currency: "BRL",
+        transport_type: "beacon"
+      });
+    });
   });
 }

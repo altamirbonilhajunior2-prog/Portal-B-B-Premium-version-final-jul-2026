@@ -1,0 +1,14 @@
+VERSÃO 2.6 — CONVERSÃO VALIDADA
+
+O projeto não possui formulário. A conversão é disparada em todos os botões de WhatsApp.
+
+Google Ads:
+AW-18217048699/fHmNCKmp2rkcEPu0yO5D
+
+Publicação:
+1. Extraia o ZIP.
+2. Substitua todo o conteúdo do repositório pelo conteúdo extraído.
+3. Commit: Valida conversão WhatsApp Google Ads v2.6
+4. Teste o site com ?v=2.6
+
+O diagnóstico do Google Ads pode levar algumas horas para atualizar.
