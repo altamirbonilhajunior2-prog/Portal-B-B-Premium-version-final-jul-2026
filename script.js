@@ -59,7 +59,7 @@ const galleries = {
 document.addEventListener("DOMContentLoaded", () => {
   setupMobileMenu();
   setupLightbox();
-  setupWhatsAppTracking();
+  setupConsultiveWhatsApp();
 });
 
 function setupMobileMenu() {
@@ -168,24 +168,109 @@ function setupLightbox() {
   });
 }
 
-function setupWhatsAppTracking() {
-  document.querySelectorAll('a[href*="wa.me/"]').forEach((link) => {
-    link.addEventListener("click", () => {
-      if (typeof window.gtag !== "function") return;
+function setupConsultiveWhatsApp() {
+  const modal = document.getElementById("consultive-modal");
+  const form = document.getElementById("consultive-form");
+  const error = document.getElementById("consultive-error");
+  const closeButtons = document.querySelectorAll("[data-close-consultive]");
+  const whatsappLinks = document.querySelectorAll("a.whatsapp-link");
 
-      const ctaLocation = link.dataset.ctaLocation || "nao_identificado";
+  if (!modal || !form || !whatsappLinks.length) return;
 
+  let sourceLocation = "nao_identificado";
+  let lastFocusedElement = null;
+
+  const sendEvent = (name, params = {}) => {
+    if (typeof window.gtag === "function") {
+      window.gtag("event", name, params);
+    }
+    if (typeof window.clarity === "function") {
+      window.clarity("event", name);
+    }
+  };
+
+  const openModal = (link) => {
+    sourceLocation = link.dataset.ctaLocation || "nao_identificado";
+    lastFocusedElement = link;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("consultive-modal-open");
+    error.textContent = "";
+    const firstInput = form.querySelector("input");
+    window.setTimeout(() => firstInput?.focus(), 80);
+    sendEvent("qualification_modal_open", {
+      property_name: "Casa Alphaville II",
+      cta_location: sourceLocation
+    });
+  };
+
+  const closeModal = () => {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("consultive-modal-open");
+    lastFocusedElement?.focus();
+  };
+
+  whatsappLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      openModal(link);
+    });
+  });
+
+  closeButtons.forEach((button) => button.addEventListener("click", closeModal));
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.classList.contains("open")) closeModal();
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (!form.checkValidity()) {
+      error.textContent = "Responda às quatro perguntas para continuar.";
+      form.reportValidity();
+      return;
+    }
+
+    const data = new FormData(form);
+    const objetivo = data.get("objetivo");
+    const aquisicao = data.get("aquisicao");
+    const prazo = data.get("prazo");
+    const condominio = data.get("condominio");
+
+    const message = [
+      "Olá, equipe da B&B Consultoria Imobiliária.",
+      "",
+      "Tenho interesse na residência do Alphaville II.",
+      "",
+      `Objetivo: ${objetivo}`,
+      `Forma de aquisição: ${aquisicao}`,
+      `Prazo para compra: ${prazo}`,
+      `Conhecimento do condomínio: ${condominio}`,
+      "",
+      "Gostaria de receber informações completas e verificar a disponibilidade atual."
+    ].join("\n");
+
+    const whatsappUrl = `https://wa.me/5512978140636?text=${encodeURIComponent(message)}`;
+
+    sendEvent("qualified_lead_submit", {
+      event_category: "WhatsApp",
+      event_label: "Casa Alphaville II",
+      property_name: "Casa Alphaville II",
+      cta_location: sourceLocation,
+      objetivo,
+      aquisicao,
+      prazo,
+      condominio,
+      transport_type: "beacon"
+    });
+
+    if (typeof window.gtag === "function") {
       window.gtag("event", "generate_lead", {
-        event_category: "WhatsApp",
+        event_category: "WhatsApp qualificado",
         event_label: "Casa Alphaville II",
-        cta_location: ctaLocation,
-        link_url: link.href,
-        transport_type: "beacon"
-      });
-
-      window.gtag("event", "whatsapp_click", {
-        property_name: "Casa Alphaville II",
-        cta_location: ctaLocation,
+        cta_location: sourceLocation,
         transport_type: "beacon"
       });
 
@@ -195,6 +280,10 @@ function setupWhatsAppTracking() {
         currency: "BRL",
         transport_type: "beacon"
       });
-    });
+    }
+
+    closeModal();
+    window.open(whatsappUrl, "_blank", "noopener");
+    form.reset();
   });
 }
