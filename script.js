@@ -59,7 +59,7 @@ const galleries = {
 document.addEventListener("DOMContentLoaded", () => {
   setupMobileMenu();
   setupLightbox();
-  setupLeadQualification();
+  setupWhatsAppTracking();
 });
 
 function setupMobileMenu() {
@@ -168,101 +168,33 @@ function setupLightbox() {
   });
 }
 
-function setupLeadQualification() {
-  const modal = document.getElementById("qualification-modal");
-  const form = document.getElementById("qualification-form");
-  const error = document.getElementById("qualification-error");
-  const closeButtons = document.querySelectorAll("[data-qualification-close]");
-  const whatsappLinks = document.querySelectorAll("a.whatsapp-link");
-  let sourceLocation = "nao_identificado";
+function setupWhatsAppTracking() {
+  document.querySelectorAll('a[href*="wa.me/"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      if (typeof window.gtag !== "function") return;
 
-  if (!modal || !form || !whatsappLinks.length) return;
+      const ctaLocation = link.dataset.ctaLocation || "nao_identificado";
 
-  const emitEvent = (name, params = {}) => {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: name, property_name: "Casa Alphaville II", ...params });
-    if (typeof window.gtag === "function") {
-      window.gtag("event", name, { property_name: "Casa Alphaville II", ...params, transport_type: "beacon" });
-    }
-    if (typeof window.clarity === "function") window.clarity("event", name);
-  };
-
-  const openModal = (location) => {
-    sourceLocation = location || "nao_identificado";
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.classList.add("qualification-open");
-    error.hidden = true;
-    emitEvent("qualification_open", { cta_location: sourceLocation });
-    setTimeout(() => modal.querySelector('input[type="radio"]')?.focus(), 80);
-  };
-
-  const closeModal = () => {
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("qualification-open");
-  };
-
-  whatsappLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      openModal(link.dataset.ctaLocation);
-    });
-  });
-
-  closeButtons.forEach((button) => button.addEventListener("click", closeModal));
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal.classList.contains("open")) closeModal();
-  });
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const data = new FormData(form);
-    const fields = ["objetivo", "aquisicao", "prazo", "conhecimento"];
-    if (fields.some((field) => !data.get(field))) {
-      error.hidden = false;
-      return;
-    }
-
-    error.hidden = true;
-    const message = [
-      "Olá, equipe da B&B Consultoria Imobiliária.",
-      "",
-      "Tenho interesse na residência do Alphaville II.",
-      "",
-      `Objetivo: ${data.get("objetivo")}`,
-      `Forma de aquisição: ${data.get("aquisicao")}`,
-      `Prazo: ${data.get("prazo")}`,
-      `Conhecimento do condomínio: ${data.get("conhecimento")}`,
-      "",
-      "Gostaria de receber mais informações."
-    ].join("\n");
-
-    emitEvent("qualification_submit", {
-      cta_location: sourceLocation,
-      objetivo: data.get("objetivo"),
-      aquisicao: data.get("aquisicao"),
-      prazo: data.get("prazo"),
-      conhecimento: data.get("conhecimento")
-    });
-
-    if (typeof window.gtag === "function") {
       window.gtag("event", "generate_lead", {
-        event_category: "WhatsApp qualificado",
+        event_category: "WhatsApp",
         event_label: "Casa Alphaville II",
-        cta_location: sourceLocation,
+        cta_location: ctaLocation,
+        link_url: link.href,
         transport_type: "beacon"
       });
+
+      window.gtag("event", "whatsapp_click", {
+        property_name: "Casa Alphaville II",
+        cta_location: ctaLocation,
+        transport_type: "beacon"
+      });
+
       window.gtag("event", "conversion", {
         send_to: "AW-18217048699/fHmNCKmp2rkcEPu0yO5D",
         value: 1.0,
         currency: "BRL",
         transport_type: "beacon"
       });
-    }
-
-    const url = `https://wa.me/5512978140636?text=${encodeURIComponent(message)}`;
-    closeModal();
-    window.open(url, "_blank", "noopener");
+    });
   });
 }
