@@ -760,3 +760,27 @@ h2 {
     max-width: 100%;
   }
 }
+
+
+/* Atendimento Consultivo B&B — V3 */
+body.qualification-open{overflow:hidden}
+.qualification-modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:20px}
+.qualification-modal.open{display:flex}
+.qualification-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)}
+.qualification-card{position:relative;z-index:1;width:min(760px,96vw);max-height:92vh;overflow:auto;padding:34px;border:1px solid rgba(240,189,85,.55);border-radius:20px;background:linear-gradient(180deg,#0b1420,#05070a);box-shadow:0 28px 80px rgba(0,0,0,.65);color:#fff}
+.qualification-logo{display:block;width:190px;max-height:78px;margin:0 auto 12px;object-fit:contain}
+.qualification-kicker{margin:0 0 8px;color:var(--gold-light);font-size:12px;font-weight:900;letter-spacing:.18em;text-align:center;text-transform:uppercase}
+.qualification-card h2{margin:0 42px 10px;font-size:clamp(28px,4vw,42px);text-align:center}
+.qualification-intro{max-width:620px;margin:0 auto 24px;color:#d8d8d8;line-height:1.55;text-align:center}
+.qualification-close{position:absolute;top:14px;right:16px;width:42px;height:42px;border:1px solid rgba(255,255,255,.25);border-radius:50%;background:rgba(255,255,255,.06);color:#fff;font-size:28px;cursor:pointer}
+#qualification-form{display:grid;gap:18px}
+#qualification-form fieldset{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:16px;border:1px solid rgba(209,154,50,.28);border-radius:14px}
+#qualification-form legend{padding:0 8px;color:#fff;font-weight:800}
+#qualification-form label{position:relative;display:flex;min-height:48px;align-items:center;cursor:pointer}
+#qualification-form input{position:absolute;opacity:0;pointer-events:none}
+#qualification-form label span{display:flex;width:100%;min-height:48px;align-items:center;justify-content:center;padding:10px 12px;border:1px solid rgba(255,255,255,.18);border-radius:10px;background:rgba(255,255,255,.045);font-size:14px;text-align:center;transition:.2s ease}
+#qualification-form input:checked+span{border-color:var(--gold-light);background:rgba(209,154,50,.18);box-shadow:0 0 0 2px rgba(209,154,50,.12);color:#fff}
+.qualification-submit{width:100%;padding:17px 18px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--gold-light),#b47818);color:#fff;font-size:14px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;cursor:pointer}
+.qualification-error{margin:0;color:#ffb2a8;font-weight:800;text-align:center}
+.qualification-privacy{margin:0;color:#aeb5be;font-size:12px;line-height:1.45;text-align:center}
+@media(max-width:640px){.qualification-modal{padding:10px}.qualification-card{max-height:96vh;padding:24px 16px 20px;border-radius:16px}.qualification-logo{width:150px}.qualification-card h2{margin:0 32px 8px;font-size:27px}.qualification-intro{font-size:14px}.qualification-card h2{line-height:1.05}#qualification-form fieldset{grid-template-columns:1fr;padding:13px;gap:8px}#qualification-form label span{min-height:44px}.qualification-submit{font-size:12px}}

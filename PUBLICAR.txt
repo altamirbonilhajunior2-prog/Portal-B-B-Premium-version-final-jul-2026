@@ -1,14 +1,9 @@
-VERSÃO 2.6 — CONVERSÃO VALIDADA
+VERSÃO 3.0 — ATENDIMENTO CONSULTIVO B&B
 
-O projeto não possui formulário. A conversão é disparada em todos os botões de WhatsApp.
-
-Google Ads:
-AW-18217048699/fHmNCKmp2rkcEPu0yO5D
+Modal com 4 perguntas e WhatsApp qualificado.
+Google Ads e Microsoft Clarity preservados.
 
 Publicação:
-1. Extraia o ZIP.
-2. Substitua todo o conteúdo do repositório pelo conteúdo extraído.
-3. Commit: Valida conversão WhatsApp Google Ads v2.6
-4. Teste o site com ?v=2.6
-
-O diagnóstico do Google Ads pode levar algumas horas para atualizar.
+1. Substitua todo o conteúdo do repositório.
+2. Commit: Publica Atendimento Consultivo B&B V3
+3. Teste com ?v=3.0
